@@ -711,8 +711,8 @@ for(let i=0;i<5;i++){const d=document.createElement('div');d.className='ent';d.s
 d.addEventListener('click',()=>{if(+d.style.opacity<.3||d.dead)return;d.dead=1;d.remove();GM.n++;track('game_soul_banished',{count:GM.n});hud();if(GM.n==5)win()});document.body.appendChild(d);e.push(d)}
 GM={e,n:0,t:Date.now()};$('#play').textContent='Hunting…';$('#hud').classList.add('on');hud();GM.iv=setInterval(hud,1000);updEnt()};
 function hud(){if(!GM)return;const s=Math.floor((Date.now()-GM.t)/1000);$('#hud').innerHTML=s<7&&GM.n==0?'Five lost souls hide in the dark. Scroll, carry your light, and click them to banish them.':`Souls banished: <b>${GM.n}/5</b> · ${fmt(s)}`}
-function win(){clearInterval(GM.iv);const s=Math.floor((Date.now()-GM.t)/1000);track('game_win',{seconds:s});secret('game');GM.txt=`I survived the haunted night on Tukify in ${fmt(s)}. Can you? ${location.href}`;$('#wt').textContent=`You banished all five souls in ${fmt(s)}.`;$('#win').classList.add('on');$('#hud').classList.remove('on')}
-$('#wshare').onclick=()=>{const t=GM&&GM.txt;if(!t)return;try{if(navigator.share){navigator.share({text:t});track('share_native_used');return}navigator.clipboard.writeText(t).then(()=>{$('#wshare').textContent='Copied'})}catch(e){$('#wt').textContent=t}};
+function win(){clearInterval(GM.iv);const s=Math.floor((Date.now()-GM.t)/1000);track('game_win',{seconds:s});secret('game');GM.txt=`I survived the haunted night on Tukify in ${fmt(s)}. Can you? ${sURL({})}`;$('#wt').textContent=`You banished all five souls in ${fmt(s)}.`;$('#win').classList.add('on');$('#hud').classList.remove('on')}
+$('#wshare').onclick=()=>{const t=GM&&GM.txt;if(!t)return;shr(t,sURL({}),$('#wshare'),true)};
 $('#wclose').onclick=()=>{if(GM){GM.e.forEach(x=>x.remove());clearInterval(GM.iv)}GM=null;$('#win').classList.remove('on');$('#play').textContent='Survive the Night';$('#wshare').textContent='Share'};
 /* 3. Ouija board */
 const OL='ABCDEFGHIJKLMNOPQRSTUVWXYZ',op={};let ob=0,oCur='mid';
@@ -757,7 +757,13 @@ function sURL(o){let b;try{const u=new URL(location.href);if(!/^https?:$/.test(u
 function cp(u,b){const done=()=>{if(b){const o=b.textContent;b.textContent='Copied';setTimeout(()=>b.textContent=o,1500)}};
 function fb(){const i=document.createElement('input');i.value=u;document.body.appendChild(i);i.select();try{document.execCommand('copy');done()}catch(e){}i.remove()}
 try{navigator.clipboard.writeText(u).then(done,fb)}catch(e){fb()}}
-function shr(t,u,b){try{if(navigator.share){navigator.share({text:t});track('share_native_used');return 'native'}}catch(e){}cp(u,b);return 'copy'}
+/* Native share sheet with the link in its own url field (some apps drop links inside text). If the sheet fails
+   for any reason other than the visitor cancelling it, fall back to copying. full=true copies the whole message. */
+let shBusy=0;
+function shr(t,u,b,full){const d={title:'Tukify',text:t.replace(u,'').trim(),url:u},fb=()=>cp(full?t:u,b);
+try{if(navigator.share&&(!navigator.canShare||navigator.canShare(d))){if(shBusy)return 'native';shBusy=1;track('share_native_used');
+navigator.share(d).catch(e=>{if(!e||e.name!=='AbortError')fb()}).finally(()=>shBusy=0);return 'native'}}catch(e){shBusy=0}
+fb();return 'copy'}
 $$('.md').forEach(m=>m.addEventListener('click',e=>{if(e.target===m||e.target.classList.contains('mx'))m.classList.remove('on')}));
 /* 1. dare a friend */
 function dUpd(){const u=sURL({dare:$('#dn').value.trim().slice(0,24)||'_'}),t='I dare you to press the "Do not press" button on this website \ud83d\ude08 '+u;$('#dl').value=u;$('#dwa').href='https://wa.me/?text='+encodeURIComponent(t);$('#dfb').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(u);return[u,t]}
