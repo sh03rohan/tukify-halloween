@@ -7,9 +7,17 @@
 <meta name="description" content="Tukify is a free AI shopping assistant for WooCommerce. Enter if you dare: a haunted Halloween experience.">
 <meta property="og:type" content="website"><meta property="og:title" content="Tukify: The AI That Haunts Your WooCommerce Store">
 <meta property="og:description" content="Free AI shopping assistant for WooCommerce. Press the button. We dare you.">
-<!-- SET THIS: after you host the page, replace YOUR-DOMAIN with your real domain and upload tukify-share-preview.jpg there -->
-<meta property="og:image" content="https://YOUR-DOMAIN/tukify-share-preview.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://YOUR-DOMAIN/tukify-share-preview.jpg"><meta name="theme-color" content="#07040a">
+<link rel="canonical" href="https://tukify-halloween.vercel.app/"><meta property="og:url" content="https://tukify-halloween.vercel.app/">
+<meta property="og:image" content="https://tukify-halloween.vercel.app/tukify-share-preview.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://tukify-halloween.vercel.app/tukify-share-preview.jpg"><meta name="theme-color" content="#07040a">
+<!-- Vercel Web Analytics (https://vercel.com/docs/analytics/quickstart, HTML). Share links carry names in ?dare/?rip/?store,
+     so beforeSend strips those params from every page view and event before it leaves the browser. -->
+<script>
+window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+window.tkRedact = function (s) { try { var abs = /^[a-z][a-z0-9+.-]*:/i.test(s), u = new URL(s, location.href); ['dare', 'rip', 'e', 'store', 'p', 'debug_analytics'].forEach(function (k) { u.searchParams.delete(k) }); u.hash = ''; return abs ? u.toString() : u.pathname + u.search } catch (e) { return s } };
+window.va('beforeSend', function (event) { return event && event.url ? Object.assign({}, event, { url: tkRedact(event.url) }) : event });
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#07040a;--blood:#c1122f;--ember:#ff6a1f;--bone:#eadfca;--mute:#9a8e9c;--card:#120a15;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
@@ -389,7 +397,7 @@ html.mid #moon{box-shadow:0 0 110px 40px #c1122f99,0 0 300px 100px #c1122f44,ins
 </section>
 </main>
 
-<footer>Built by <a href="https://profiles.wordpress.org/shrohan03/" target="_blank" rel="noopener">Sakibul Hasan Rohan</a> · <a href="https://wordpress.org/support/plugin/tukify/" target="_blank" rel="noopener">Support</a> · <button id="nopress" style="font-size:12px;padding:5px 10px">Do not press</button> · <button class="dare-b" style="font-size:12px;padding:5px 10px">Dare a friend</button><p style="margin-top:12px;font-size:13px">The spooky lines about your time, screen and browser come only from your own browser. Nothing is stored or sent anywhere.</p></footer>
+<footer>Built by <a href="https://profiles.wordpress.org/shrohan03/" target="_blank" rel="noopener">Sakibul Hasan Rohan</a> · <a href="https://wordpress.org/support/plugin/tukify/" target="_blank" rel="noopener">Support</a> · <button id="nopress" style="font-size:12px;padding:5px 10px">Do not press</button> · <button class="dare-b" style="font-size:12px;padding:5px 10px">Dare a friend</button><p style="margin-top:12px;font-size:13px">The spooky lines about your time, screen and browser use only your own browser info and are never sent anywhere. This site uses anonymous, cookie-free analytics to count visits and clicks.</p></footer>
 
 <div id="scare"><div id="face"></div><div id="stext">I SEE YOU. GO DOWNLOAD TUKIFY.</div></div><div id="mini" class="fc"></div>
 <div id="wh"></div><div id="hb"></div>
@@ -405,6 +413,17 @@ html.mid #moon{box-shadow:0 0 110px 40px #c1122f99,0 0 300px 100px #c1122f44,ins
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+/* Analytics: anonymous custom events for Vercel Web Analytics. Fixed labels and numbers only, never anything a visitor typed.
+   Limits (vercel.com/docs/analytics/custom-events): values are string|number|boolean|null, name/key/value max 255 chars.
+   Add ?debug_analytics=1 to the URL to log every event to the console. */
+const TK_DEBUG=new URLSearchParams(location.search).get('debug_analytics')==='1',
+TK_ONCE=new Set(['gate_view','landing_type','scroll_depth','time_on_page','section_view','device','reduced_motion','secrets_complete','midnight_mode_shown']),TK_SENT=new Set();
+function track(name,data){try{name=String(name).slice(0,255);const d={};
+for(const k in data||{}){const v=data[k];if(v===null||typeof v==='boolean'||(typeof v==='number'&&isFinite(v)))d[k.slice(0,255)]=v;else if(typeof v==='string')d[k.slice(0,255)]=v.slice(0,255)}
+if(TK_ONCE.has(name)){const key=name+JSON.stringify(d);if(TK_SENT.has(key))return;TK_SENT.add(key)}
+if(TK_DEBUG)console.log('[analytics]',name,d);if(typeof window.va!=='function')return;
+window.va('event',Object.keys(d).length?{name,data:d}:{name})}catch(e){}}
+const tkWhere=el=>el.closest('nav')?'nav':el.closest('.hero')?'hero':el.closest('.final')?'final':el.closest('#win')?'win_card':el.closest('footer')?'footer':'other';
 /* Fog + embers */
 const cv=$('#fx'),cx=cv.getContext('2d');let W,H,P=[],F=[];
 function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}rs();addEventListener('resize',()=>{rs();if(rm)draw(0)});
@@ -419,7 +438,7 @@ let lamp=true,mx=innerWidth/2,my=innerHeight*.4;
 function setL(x,y){mx=x;my=y;document.documentElement.style.setProperty('--x',x+'px');document.documentElement.style.setProperty('--y',y+'px');
 $$('.eye').forEach(e=>{const r=e.getBoundingClientRect();e.classList.toggle('on',Math.hypot(r.x-x,r.y-y)>(lamp?230:0)&&Math.hypot(r.x-x,r.y-y)<900)})}
 addEventListener('pointermove',e=>setL(e.clientX,e.clientY));
-$('#dtog').onclick=()=>{lamp=!lamp;$('#dark').style.opacity=lamp?1:0;$('#dtog').textContent='Light: '+(lamp?'ON':'OFF')};
+$('#dtog').onclick=()=>{lamp=!lamp;$('#dark').style.opacity=lamp?1:0;$('#dtog').textContent='Light: '+(lamp?'ON':'OFF');track('light_toggle',{state:lamp?'on':'off'})};
 /* Lurking eyes */
 for(let i=0;i<9;i++){const e=document.createElement('div');e.className='eye';e.style.left=(5+Math.random()*88)+'%';e.style.top=(8+Math.random()*80)+'%';e.style.animationDelay=-Math.random()*5+'s';e.style.setProperty('--s',.6+Math.random()*1.2);e.innerHTML='<i></i><i></i>';$('#eyes').appendChild(e)}
 setL(mx,my);
@@ -444,10 +463,10 @@ const SC={
 '*lingers on checkout for 2 minutes*':{u:'*lingers on checkout for 2 minutes*',b:'Still there, mortal? 👻 Most people hesitate over shipping cost, sizing or payment. Which one is haunting you?',p:[],chips:['Shipping cost','Sizing','Payment']},
 'Shipping cost':{u:'Shipping cost',b:'Answered from your live cart, shipping zones and knowledge base, with no AI call needed. Spooky fast.',p:[]},'Sizing':{u:'Sizing',b:'The size advisor reads your store’s own info, so it never guesses.',p:[]},'Payment':{u:'Payment',b:'It lists the payment gateways your store has active. Nothing invented.',p:[]}};
 let n=0;const log=$('#log');
-function chips(a){$('#chips').innerHTML='';a.forEach(k=>{const b=document.createElement('button');b.textContent=k;b.onclick=()=>say(k);$('#chips').appendChild(b)})}
+function chips(a){$('#chips').innerHTML='';a.forEach(k=>{const b=document.createElement('button');b.textContent=k;b.onclick=()=>{track('chat_demo_chip',{index:Object.keys(SC).indexOf(k)+1});say(k)};$('#chips').appendChild(b)})}
 function add(c,h){const d=document.createElement('div');d.className='m '+c;d.innerHTML=h;log.appendChild(d);log.scrollTop=log.scrollHeight;return d}
 function say(k){const s=SC[k];add('u',s.u);const t=add('b','<span class="dots"><i></i><i></i><i></i></span>');
-setTimeout(()=>{t.textContent='';let i=0;const iv=setInterval(()=>{t.textContent=s.b.slice(0,++i);log.scrollTop=log.scrollHeight;if(i>=s.b.length){clearInterval(iv);s.p.forEach(id=>{const[ic,nm,pr]=PR[id],c=document.createElement('div');c.className='pc';c.innerHTML=`<span class="ic">${ic}</span><div>${nm}<br><small>${pr}</small></div><button>+ Add</button>`;c.querySelector('button').onclick=e=>{$('#cart').textContent='🛒 '+(++n);e.target.textContent='✓ Added'};t.appendChild(c);log.scrollTop=log.scrollHeight});if(s.chips)chips(s.chips);else chips(['Find a cursed gift for my sister','Compare the hoodie and the cloak','Where is my order #1313?','*lingers on checkout for 2 minutes*'])}},rm?0:18)},700)}
+setTimeout(()=>{t.textContent='';let i=0;const iv=setInterval(()=>{t.textContent=s.b.slice(0,++i);log.scrollTop=log.scrollHeight;if(i>=s.b.length){clearInterval(iv);s.p.forEach(id=>{const[ic,nm,pr]=PR[id],c=document.createElement('div');c.className='pc';c.innerHTML=`<span class="ic">${ic}</span><div>${nm}<br><small>${pr}</small></div><button>+ Add</button>`;c.querySelector('button').onclick=e=>{$('#cart').textContent='🛒 '+(++n);e.target.textContent='✓ Added';track('cart_add_demo')};t.appendChild(c);log.scrollTop=log.scrollHeight});if(s.chips)chips(s.chips);else chips(['Find a cursed gift for my sister','Compare the hoodie and the cloak','Where is my order #1313?','*lingers on checkout for 2 minutes*'])}},rm?0:18)},700)}
 chips(['Find a cursed gift for my sister','Compare the hoodie and the cloak','Where is my order #1313?','*lingers on checkout for 2 minutes*']);
 /* Jumpscare */
 /* Procedural faces: every scare is a different entity */
@@ -498,17 +517,17 @@ osc('sawtooth',55,48,.2,3.6,.35);osc('sawtooth',58,50,.2,3.6,.3);
 const wb=a.createBufferSource(),wf=a.createBiquadFilter(),wg=a.createGain();wb.buffer=nb;wf.type='bandpass';wf.frequency.value=3200;wf.Q.value=1.5;env(wg,1.2,3.6,.25);wb.connect(wf);wf.connect(wg);wg.connect(m);wb.start(T+1.2)}
 /* Big scare: instant, no delay */
 let scaring=0;
-$('#nopress').onclick=()=>{if(scaring)return;if(window.CALM){toast('Calm mode is on. The button is just a button.');return}scaring=1;secret('press');
+$('#nopress').onclick=()=>{if(scaring)return;track('scare_pressed');if(window.CALM){toast('Calm mode is on. The button is just a button.');return}scaring=1;secret('press');
 const s=$('#scare'),f=$('#face'),t=$('#stext');if(!FI.length)prepFaces();
 let k=Math.random()*FI.length|0;FI.forEach((im,i)=>im.classList.toggle('on',i==k));
 s.className='on';f.classList.add('go');t.className='go';
 horror(1);setTimeout(()=>voice('i see you'),700);try{navigator.vibrate&&navigator.vibrate([400,50,200,50,500])}catch(e){}
 requestAnimationFrame(()=>{document.documentElement.classList.add('sc');window.pz=1});
 let c2=0;const sw=setInterval(()=>{k=(k+1+(Math.random()*(FI.length-1)|0))%FI.length;FI.forEach((im,i)=>im.classList.toggle('on',i==k));if(++c2>6)clearInterval(sw)},120);
-setTimeout(()=>{s.className='';f.classList.remove('go');t.className='';scaring=0;window.pz=0;document.documentElement.classList.remove('sc');$$('.eye').forEach(e=>e.classList.add('on'));const fl=$('#flash');fl.style.opacity=.5;setTimeout(()=>fl.style.opacity=0,80);setTimeout(()=>setL(mx,my),4000);dareToast()},3000)};
+setTimeout(()=>{s.className='';f.classList.remove('go');t.className='';scaring=0;window.pz=0;document.documentElement.classList.remove('sc');$$('.eye').forEach(e=>e.classList.add('on'));const fl=$('#flash');fl.style.opacity=.5;setTimeout(()=>fl.style.opacity=0,80);setTimeout(()=>setL(mx,my),4000);track('scare_completed');dareToast()},3000)};
 /* Mini scares: cursor touches an eye, or you go idle */
 let lastMini=0,idle=Date.now();
-function mini(){const n=Date.now();if(rm||window.CALM||!FACES.length||scaring||n-lastMini<25000)return;lastMini=n;const m=$('#mini');m.innerHTML='<img alt="" src="'+FACES[Math.random()*FACES.length|0]+'">';m.style.left=(Math.random()<.5?2:42)+'vw';m.style.top=(Math.random()*30)+'vh';m.classList.remove('on');void m.offsetWidth;m.classList.add('on');horror(0)}
+function mini(){const n=Date.now();if(rm||window.CALM||!FACES.length||scaring||n-lastMini<25000)return;lastMini=n;const m=$('#mini');m.innerHTML='<img alt="" src="'+FACES[Math.random()*FACES.length|0]+'">';m.style.left=(Math.random()<.5?2:42)+'vw';m.style.top=(Math.random()*30)+'vh';m.classList.remove('on');void m.offsetWidth;m.classList.add('on');horror(0);track('mini_scare_shown')}
 addEventListener('pointermove',e=>{idle=Date.now();if($$('.eye').some(x=>{const r=x.getBoundingClientRect();return Math.hypot(r.x-e.clientX,r.y-e.clientY)<100}))mini()});
 setInterval(()=>{if(Date.now()-idle>30000){idle=Date.now();lastMini=0;mini()}},2000);
 /* Realistic bats: flapping wings, burst-and-glide, erratic steering, occasional swoops at your cursor */
@@ -567,14 +586,14 @@ const ev=(fn,first,lo,hi)=>setTimeout(function r(){if(on&&!document.hidden)fn();
 ev(whisper,6000,12000,22000);ev(moan,14000,26000,45000);ev(pack,20000,30000,55000);ev(bell,28000,40000,70000);ev(laugh,35000,50000,80000)}
 const st=e=>{if(e.target.closest&&e.target.closest('#stog'))return;start()};
 addEventListener('pointerdown',st);addEventListener('keydown',st);
-$('#stog').onclick=()=>{if(!go){start();return}on=!on;AM.gain.cancelScheduledValues(a.currentTime);AM.gain.setTargetAtTime(on?.15:0,a.currentTime,.3);$('#stog').textContent=on?'Sound: ON':'Sound: OFF'}})();
+$('#stog').onclick=()=>{if(!go){start();track('sound_toggle',{state:'on'});return}on=!on;AM.gain.cancelScheduledValues(a.currentTime);AM.gain.setTargetAtTime(on?.15:0,a.currentTime,.3);$('#stog').textContent=on?'Sound: ON':'Sound: OFF';track('sound_toggle',{state:on?'on':'off'})}})();
 /* ---- v3: gate, ghost cursor, drips, moon parallax, glitch text, countdown, easter egg ---- */
 function creak(){const a=ac();if(!a)return;const T=a.currentTime,L=1.9,o=a.createOscillator(),f=a.createBiquadFilter(),g=a.createGain();o.type='sawtooth';f.type='bandpass';f.Q.value=7;
 for(let t=0;t<L;t+=.035){o.frequency.setValueAtTime(110+Math.random()*60+Math.sin(t*5)*50+t*40,T+t);f.frequency.setValueAtTime(500+Math.random()*700,T+t)}
 g.gain.setValueAtTime(.0001,T);g.gain.exponentialRampToValueAtTime(.2,T+.25);g.gain.setValueAtTime(.2,T+L-.4);g.gain.exponentialRampToValueAtTime(.0001,T+L);
 o.connect(f);f.connect(g);g.connect(a.destination);o.start(T);o.stop(T+L+.1);
 const b=a.createOscillator(),bg=a.createGain();b.frequency.setValueAtTime(70,T+L);b.frequency.exponentialRampToValueAtTime(30,T+L+.6);bg.gain.setValueAtTime(.0001,T+L);bg.gain.exponentialRampToValueAtTime(.35,T+L+.03);bg.gain.exponentialRampToValueAtTime(.0001,T+L+.7);b.connect(bg);bg.connect(a.destination);b.start(T+L);b.stop(T+L+.8)}
-$('#enter').onclick=()=>{tiltInit();setTimeout(()=>{try{hbuf(ac());speechSynthesis.getVoices()}catch(e){}},1200);const g=$('#gate');if(g.classList.contains('open'))return;g.classList.add('open');creak();setTimeout(()=>{g.remove();document.body.classList.remove('lock');afterGate()},2700)};
+$('#enter').onclick=()=>{tiltInit();setTimeout(()=>{try{hbuf(ac());speechSynthesis.getVoices()}catch(e){}},1200);const g=$('#gate');if(g.classList.contains('open'))return;track('gate_enter',{mode:window.CALM?'calm':'normal'});g.classList.add('open');creak();setTimeout(()=>{g.remove();document.body.classList.remove('lock');afterGate()},2700)};
 /* haunted pumpkins (with arms and legs) burst from the cursor; clicks explode */
 const PK='<svg viewBox="0 0 80 90"><g class="l1" fill="none" stroke="#1b0d05" stroke-width="3" stroke-linecap="round"><path d="M33 72Q31 82 25 86M25 86l-5 1M25 86l-1 5M25 86l4 4"/></g><g class="l2" fill="none" stroke="#1b0d05" stroke-width="3" stroke-linecap="round"><path d="M47 72Q49 82 55 86M55 86l5 1M55 86l1 5M55 86l-4 4"/></g><g class="a1" fill="none" stroke="#1b0d05" stroke-width="3" stroke-linecap="round"><path d="M18 44Q6 40 4 26M4 26l-4-5M4 26l1-8M4 26l6-4"/></g><g class="a2" fill="none" stroke="#1b0d05" stroke-width="3" stroke-linecap="round"><path d="M62 44Q74 40 76 26M76 26l4-5M76 26l-1-8M76 26l-6-4"/></g><path d="M38 26Q35 14 44 9Q47 17 42 26z" fill="#33411a" stroke="#141a08"/><ellipse cx="27" cy="49" rx="15" ry="23" fill="url(#pgx)" stroke="#4a1500"/><ellipse cx="53" cy="49" rx="15" ry="23" fill="url(#pgx)" stroke="#4a1500"/><ellipse cx="40" cy="49" rx="14" ry="25" fill="url(#pgx)" stroke="#4a1500"/><path d="M24 40L35 43 28 51zM56 40L45 43 52 51zM40 49l-3.5 6h7z" fill="#ffe14a"/><path d="M24 57L28 54 32 60 36 55 40 61 44 55 48 60 52 54 56 57Q52 71 40 71 28 71 24 57z" fill="#ffe14a"/><path d="M31 57l2.5 4.5L36 57zM44 57l2.5 4.5L49 57z" fill="#4a1500"/></svg>';
 let pkn=0;
@@ -617,13 +636,13 @@ t();setInterval(t,1000)})();
 function poss(){if(window._ps||window.CALM)return;window._ps=1;document.documentElement.classList.add('poss');$$('.eye').forEach(e=>e.classList.add('on'));horror(0);voice('the dead are awake');const fl=$('#flash');fl.style.opacity=.6;setTimeout(()=>fl.style.opacity=0,90);
 const m=document.createElement('div');m.id='pm';m.textContent='THE DEAD ARE AWAKE';document.body.appendChild(m);
 setTimeout(()=>{document.documentElement.classList.remove('poss');m.remove();window._ps=0;setL(mx,my)},4200)}
-addEventListener('keydown',e=>{seq.push(e.key.length==1?e.key.toLowerCase():e.key);seq=seq.slice(-10);if(seq.join()==K){secret('konami');poss()}});
-$('#moon').onclick=()=>{secret('moon');poss()}})();
+addEventListener('keydown',e=>{seq.push(e.key.length==1?e.key.toLowerCase():e.key);seq=seq.slice(-10);if(seq.join()==K){track('easter_egg',{type:'konami'});secret('konami');poss()}});
+$('#moon').onclick=()=>{track('easter_egg',{type:'moon'});secret('moon');poss()}})();
 /* ---- v4 features ---- */
 /* 8. spooky voice */
 function voice(t){try{if(!window.sndOn||!sndOn()||!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t);u.pitch=.1;u.rate=.55;u.volume=.7;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 /* 4. lightning reveals a figure in the graveyard */
-function fig(){if(rm||scrollY>innerHeight*.6||document.body.classList.contains('lock'))return;const e=$('#fig');e.style.left=(6+Math.random()*84)+'vw';e.style.width=(34+Math.random()*30)+'px';e.style.opacity=1;setTimeout(()=>e.style.opacity=0,320)}
+function fig(){if(rm||scrollY>innerHeight*.6||document.body.classList.contains('lock'))return;const e=$('#fig');e.style.left=(6+Math.random()*84)+'vw';e.style.width=(34+Math.random()*30)+'px';e.style.opacity=1;setTimeout(()=>e.style.opacity=0,320);track('lightning_figure_seen')}
 /* 5. heartbeat near download buttons */
 function thump(i){const a=ac();if(!a||!window.sndOn||!sndOn())return;const T=a.currentTime;[0,.28].forEach((d,k)=>{const o=a.createOscillator(),g=a.createGain();o.frequency.setValueAtTime(k?55:70,T+d);o.frequency.exponentialRampToValueAtTime(30,T+d+.18);g.gain.setValueAtTime(.0001,T+d);g.gain.exponentialRampToValueAtTime(.32*i,T+d+.02);g.gain.exponentialRampToValueAtTime(.0001,T+d+.22);o.connect(g);g.connect(a.destination);o.start(T+d);o.stop(T+d+.25)})}
 (function(){if(rm||matchMedia('(hover:none)').matches)return;let hb=0;const ov=$('#hb');
@@ -657,7 +676,7 @@ hd.style.opacity=1;const A=hd.animate([{transform:a0},{transform:a1}],{duration:
 const mv=ev=>{if(Math.hypot(ev.clientX-X,ev.clientY-Y)>20&&A.playState==='running'&&A.playbackRate>0)A.playbackRate=-2.5};
 const clean=()=>{hd.style.opacity=0;A.cancel();removeEventListener('pointermove',mv);hdBusy=0;lastHand=Date.now();idle=Date.now()};
 addEventListener('pointermove',mv);
-A.onfinish=()=>{if(A.playbackRate<0){clean();return}removeEventListener('pointermove',mv);burst(X,Y);secret('hand');if(window.sndOn&&sndOn())horror(0);
+A.onfinish=()=>{if(A.playbackRate<0){clean();return}removeEventListener('pointermove',mv);burst(X,Y);track('hand_grab');secret('hand');if(window.sndOn&&sndOn())horror(0);
 const B=hd.animate([{transform:a1},{transform:`translate(${X-40}px,${Y-4}px) rotate(${th}rad)`,offset:.15},{transform:`translate(${X-50}px,${Y+3}px) rotate(${th}rad)`,offset:.3},{transform:a0}],{duration:1500,easing:'ease-in',fill:'forwards'});B.onfinish=()=>{B.cancel();clean()}}}
 setInterval(()=>{if(rm||window.CALM||hdBusy||scaring||document.hidden||document.body.classList.contains('lock'))return;const n=Date.now();if(n-idle>14000&&n-lastHand>45000)hand()},2000);
 /* 9. phone tilt flashlight */
@@ -673,13 +692,13 @@ let GM=null;
 function updEnt(){if(!GM)return;GM.e.forEach(e=>{if(e.dead)return;const r=e.getBoundingClientRect(),d=Math.hypot(r.x+r.width/2-mx,r.y+r.height/2-my);e.style.opacity=Math.max(0,Math.min(1,(230-d)/140))})}
 addEventListener('pointermove',updEnt);addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')return;setL(e.clientX,e.clientY);updEnt()});addEventListener('scroll',()=>requestAnimationFrame(updEnt),{passive:true});
 function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
-$('#play').onclick=()=>{if(GM)return;const Hh=document.documentElement.scrollHeight,span=(Hh-900)/5,e=[];
+$('#play').onclick=()=>{if(GM)return;track('cta_click',{id:'survive_the_night'});track('game_start');const Hh=document.documentElement.scrollHeight,span=(Hh-900)/5,e=[];
 for(let i=0;i<5;i++){const d=document.createElement('div');d.className='ent';d.style.left=(5+Math.random()*86)+'%';d.style.top=(420+(i+Math.random()*.8)*span)+'px';d.innerHTML=ENT;
-d.addEventListener('click',()=>{if(+d.style.opacity<.3||d.dead)return;d.dead=1;d.remove();GM.n++;hud();if(GM.n==5)win()});document.body.appendChild(d);e.push(d)}
+d.addEventListener('click',()=>{if(+d.style.opacity<.3||d.dead)return;d.dead=1;d.remove();GM.n++;track('game_soul_banished',{count:GM.n});hud();if(GM.n==5)win()});document.body.appendChild(d);e.push(d)}
 GM={e,n:0,t:Date.now()};$('#play').textContent='Hunting…';$('#hud').classList.add('on');hud();GM.iv=setInterval(hud,1000);updEnt()};
 function hud(){if(!GM)return;const s=Math.floor((Date.now()-GM.t)/1000);$('#hud').innerHTML=s<7&&GM.n==0?'Five lost souls hide in the dark. Scroll, carry your light, and click them to banish them.':`Souls banished: <b>${GM.n}/5</b> · ${fmt(s)}`}
-function win(){secret('game');clearInterval(GM.iv);const s=Math.floor((Date.now()-GM.t)/1000);GM.txt=`I survived the haunted night on Tukify in ${fmt(s)}. Can you? ${location.href}`;$('#wt').textContent=`You banished all five souls in ${fmt(s)}.`;$('#win').classList.add('on');$('#hud').classList.remove('on')}
-$('#wshare').onclick=()=>{const t=GM&&GM.txt;if(!t)return;try{if(navigator.share){navigator.share({text:t});return}navigator.clipboard.writeText(t).then(()=>{$('#wshare').textContent='Copied'})}catch(e){$('#wt').textContent=t}};
+function win(){clearInterval(GM.iv);const s=Math.floor((Date.now()-GM.t)/1000);track('game_win',{seconds:s});secret('game');GM.txt=`I survived the haunted night on Tukify in ${fmt(s)}. Can you? ${location.href}`;$('#wt').textContent=`You banished all five souls in ${fmt(s)}.`;$('#win').classList.add('on');$('#hud').classList.remove('on')}
+$('#wshare').onclick=()=>{const t=GM&&GM.txt;if(!t)return;try{if(navigator.share){navigator.share({text:t});track('share_native_used');return}navigator.clipboard.writeText(t).then(()=>{$('#wshare').textContent='Copied'})}catch(e){$('#wt').textContent=t}};
 $('#wclose').onclick=()=>{if(GM){GM.e.forEach(x=>x.remove());clearInterval(GM.iv)}GM=null;$('#win').classList.remove('on');$('#play').textContent='Survive the Night';$('#wshare').textContent='Share'};
 /* 3. Ouija board */
 const OL='ABCDEFGHIJKLMNOPQRSTUVWXYZ',op={};let ob=0,oCur='mid';
@@ -695,7 +714,7 @@ pl.style.transform=`translate(${p[0]/100*bd.width-w/2}px,${p[1]/100*bd.height-w*
 function oAns(q){q=q.toLowerCase();const M=[[/gift|present/,'BLOOD MOON CANDLE'],[/cheap|budget|price|under/,'UNDER TWENTY COINS'],[/size|fit/,'GO UP ONE SIZE'],[/order|track|deliver|parcel/,'IT IS BEHIND YOU'],[/ship/,'FIVE NIGHTS'],[/discount|sale|coupon|offer/,'ASK AT MIDNIGHT'],[/who|name/,'TUKIFY'],[/die|dead|death|kill/,'YES'],[/love|friend|safe/,'NO'],[/hello|\bhi\b|hey/,'WELCOME MORTAL'],[/free/,'YES FOREVER']];
 for(const[r,a]of M)if(r.test(q))return a;const D=['I SEE YOU','DO NOT TURN AROUND','LEAVE','TUKIFY KNOWS','THE CART IS HUNGRY'];return D[Math.random()*D.length|0]}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-async function ask(q){if(ob)return;ob=1;secret('ouija');q=(q||'').trim();const inp=$('#oq'),btn=$('#oa'),out=$('#oans');inp.disabled=btn.disabled=true;out.textContent='';
+async function ask(q){if(ob)return;ob=1;track('ouija_ask');secret('ouija');q=(q||'').trim();const inp=$('#oq'),btn=$('#oa'),out=$('#oans');inp.disabled=btn.disabled=true;out.textContent='';
 const ans=oAns(q);oMove('mid',900);scrape();await sleep(1000);
 if(ans=='YES'||ans=='NO'){oMove(ans,1100);scrape();await sleep(1300);out.textContent=ans}
 else for(const c of ans){if(c==' '){oMove('mid',500);await sleep(650);out.textContent+=' ';continue}if(!op[c])continue;oMove(c,900);scrape();await sleep(1000);
@@ -712,6 +731,7 @@ setTimeout(()=>{prepFaces();Promise.all(FI.map(i=>i.decode?i.decode().catch(()=>
 /* url params */
 const QS=new URLSearchParams(location.search),cl=s=>(s||'').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,46),
 Pd=QS.has('dare')?cl(QS.get('dare')):null,Pr=QS.get('rip')?cl(QS.get('rip')):null,Pe=cl(QS.get('e')),Ps=QS.get('store')?cl(QS.get('store')):null,Pp=(QS.get('p')||'').split('|').map(cl).filter(Boolean).slice(0,3);
+track('landing_type',{type:Pd!==null?'dare':Pr?'rip':Ps?'store':'direct'});
 (function(){const p=$('#gate .gc p'),b=$('#enter'),dn=Pd&&Pd!=='_'?Pd+', ':'';
 if(Pd!==null){p.textContent=dn+'someone dared you to press the forbidden button at the bottom of this page.';b.textContent='Accept the dare'}
 else if(Pr){p.textContent='Someone dug a grave with your name on it…';b.textContent='Face your grave'}
@@ -723,20 +743,20 @@ function sURL(o){let b;try{const u=new URL(location.href);if(!/^https?:$/.test(u
 function cp(u,b){const done=()=>{if(b){const o=b.textContent;b.textContent='Copied';setTimeout(()=>b.textContent=o,1500)}};
 function fb(){const i=document.createElement('input');i.value=u;document.body.appendChild(i);i.select();try{document.execCommand('copy');done()}catch(e){}i.remove()}
 try{navigator.clipboard.writeText(u).then(done,fb)}catch(e){fb()}}
-function shr(t,u,b){try{if(navigator.share){navigator.share({text:t});return}}catch(e){}cp(u,b)}
+function shr(t,u,b){try{if(navigator.share){navigator.share({text:t});track('share_native_used');return 'native'}}catch(e){}cp(u,b);return 'copy'}
 $$('.md').forEach(m=>m.addEventListener('click',e=>{if(e.target===m||e.target.classList.contains('mx'))m.classList.remove('on')}));
 /* 1. dare a friend */
 function dUpd(){const u=sURL({dare:$('#dn').value.trim().slice(0,24)||'_'}),t='I dare you to press the "Do not press" button on this website \ud83d\ude08 '+u;$('#dl').value=u;$('#dwa').href='https://wa.me/?text='+encodeURIComponent(t);$('#dfb').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(u);return[u,t]}
-function openDare(){dUpd();$('#dm').classList.add('on')}
-$('#dn').addEventListener('input',dUpd);$('#dshare').onclick=()=>{const r=dUpd();shr(r[1],r[0],$('#dshare'))};$('#dcopy').onclick=()=>cp(dUpd()[0],$('#dcopy'));
-$$('.dare-b').forEach(b=>b.onclick=openDare);
-function dareToast(){$('#dt').classList.add('on');clearTimeout(dareToast.h);dareToast.h=setTimeout(()=>$('#dt').classList.remove('on'),9000);if(Pd!==null&&!window._dm){window._dm=1;setTimeout(openDare,1600)}}
-$('#dt').onclick=()=>{$('#dt').classList.remove('on');openDare()};
+function openDare(src){dUpd();$('#dm').classList.add('on');track('dare_modal_open',{source:src||'other'})}
+$('#dn').addEventListener('input',dUpd);$('#dshare').onclick=()=>{const r=dUpd();track('dare_share',{channel:shr(r[1],r[0],$('#dshare'))})};$('#dcopy').onclick=()=>{cp(dUpd()[0],$('#dcopy'));track('dare_share',{channel:'copy'})};
+$$('.dare-b').forEach(b=>b.onclick=()=>{const s=tkWhere(b);track('cta_click',{id:'dare_'+s});openDare(s)});
+function dareToast(){$('#dt').classList.add('on');clearTimeout(dareToast.h);dareToast.h=setTimeout(()=>$('#dt').classList.remove('on'),9000);if(Pd!==null&&!window._dm){window._dm=1;setTimeout(()=>openDare('auto'),1600)}}
+$('#dt').onclick=()=>{$('#dt').classList.remove('on');track('cta_click',{id:'dare_toast'});openDare('toast')};
 /* 5. secrets hunt */
 const SEC={moon:['The Blood Moon','Something red hangs in the sky. Touch it.'],konami:['The Old Code','Some doors open with a famous sequence on the keyboard.'],game:['The Survivor','Banish all five lost souls.'],ouija:['The Medium','The spirit board speaks if you ask it.'],press:['The Forbidden','There is a button at the bottom that says do not press.'],hand:['The Grab','Stop moving for a while. Something will reach for you.'],bat:['The Catcher','Click a bat while it flies.']};
 let SF=[];try{SF=JSON.parse(localStorage.getItem('tk_sec')||'[]')}catch(e){}
 function sbUpd(){$('#sbadge').textContent='Secrets '+SF.length+'/7';$('#sl').innerHTML=Object.keys(SEC).map(k=>{const f=SF.includes(k);return `<li class="${f?'f':''}"><b>${f?SEC[k][0]:'???'}</b><span>${SEC[k][1]}</span></li>`}).join('')}
-function secret(id){if(SF.includes(id)||!SEC[id])return;SF.push(id);try{localStorage.setItem('tk_sec',JSON.stringify(SF))}catch(e){}sbUpd();toast('Secret found: '+SEC[id][0]+' ('+SF.length+'/7)');if(SF.length==7)setTimeout(()=>$('#sr').classList.add('on'),2500)}
+function secret(id){if(SF.includes(id)||!SEC[id])return;SF.push(id);try{localStorage.setItem('tk_sec',JSON.stringify(SF))}catch(e){}sbUpd();toast('Secret found: '+SEC[id][0]+' ('+SF.length+'/7)');track('secret_found',{id,count:SF.length});if(SF.length==7){track('secrets_complete');setTimeout(()=>$('#sr').classList.add('on'),2500)}}
 $('#sbadge').onclick=()=>$('#sp').classList.add('on');sbUpd();
 async function wallpaper(){const c=document.createElement('canvas');c.width=1920;c.height=1080;const g=c.getContext('2d'),bg=g.createLinearGradient(0,0,0,1080);bg.addColorStop(0,'#1a0510');bg.addColorStop(.7,'#0b0510');bg.addColorStop(1,'#07040a');g.fillStyle=bg;g.fillRect(0,0,1920,1080);
 let sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
@@ -749,12 +769,12 @@ const P=new Path2D(p.getAttribute('d'));if(p.getAttribute('fill')=='none'){g.str
 try{await document.fonts.load('200px Creepster')}catch(e){}
 g.textAlign='center';g.font='230px Creepster, fantasy';g.fillStyle='#eadfca';g.shadowColor='#c1122f';g.shadowBlur=50;g.fillText('TUKIFY',760,470);g.shadowBlur=0;
 g.font='italic 44px Georgia, serif';g.fillStyle='#d9ccd8';g.fillText('The AI shopping assistant that never sleeps',760,550);g.font='28px monospace';g.fillStyle='#ff6a1f';g.fillText('Free for WooCommerce · wordpress.org/plugins/tukify',760,610);return c}
-$('#swp').onclick=async()=>{const b=$('#swp');b.disabled=true;try{const c=await wallpaper(),blob=await new Promise(r=>c.toBlob(r,'image/png'));let dl=null;try{dl=window.claude&&claude.use?await claude.use('downloads'):null}catch(e){}
+$('#swp').onclick=async()=>{const b=$('#swp');b.disabled=true;track('wallpaper_save_click');try{const c=await wallpaper(),blob=await new Promise(r=>c.toBlob(r,'image/png'));let dl=null;try{dl=window.claude&&claude.use?await claude.use('downloads'):null}catch(e){}
 if(dl)await dl.save({filename:'tukify-haunted-wallpaper.png',data:blob});else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='tukify-haunted-wallpaper.png';document.body.appendChild(a);a.click();a.remove()}}catch(e){}b.disabled=false};
 $('#ssh').onclick=()=>{const u=sURL({});shr('I found all 7 secrets on the Tukify haunted website. Can you? '+u,u,$('#ssh'))};
 /* 4. haunt your store */
 let hbusy=0,HS=null;
-async function haunt(st,ps){if(hbusy)return;hbusy=1;HS={st,ps};const lg=$('#hlog');lg.innerHTML='';$('#hname').textContent=st;
+async function haunt(st,ps,src){if(hbusy)return;hbusy=1;HS={st,ps};track('haunt_store_run',{source:src||'form'});const lg=$('#hlog');lg.innerHTML='';$('#hname').textContent=st;
 const ad=(c,t)=>{const d=document.createElement('div');d.className='m '+c;d.textContent=t;lg.appendChild(d);lg.scrollTop=lg.scrollHeight;return d};
 const typ=async t=>{const d=ad('b','');for(let i=1;i<=t.length;i++){d.textContent=t.slice(0,i);lg.scrollTop=lg.scrollHeight;await sleep(18)}return d};
 await sleep(300);await typ('Welcome to '+st+', mortal… I know every item on these shelves. What do you seek?');await sleep(600);ad('u','Anything for Halloween?');await sleep(500);
@@ -763,21 +783,48 @@ ps.forEach(p=>{const c=document.createElement('div');c.className='pc';c.innerHTM
 lg.scrollTop=lg.scrollHeight;await sleep(900);ad('u','Where is my order?');await sleep(500);await typ('I will find it. Verify your billing email first… unless the dead at '+st+' have already taken it.');
 $('#hshare').disabled=false;hbusy=0}
 $('#hgo').onclick=()=>{const st=cl($('#hs').value)||'Your Shop',ps=[...$$('.hp')].map(i=>cl(i.value)).filter(Boolean),d=['Crypt Hoodie','Raven Quill','Blood Moon Candle'];while(ps.length<3)ps.push(d[ps.length]);haunt(st,ps.slice(0,3))};
-$('#hshare').onclick=()=>{if(!HS)return;const u=sURL({store:HS.st,p:HS.ps.join('|')});shr('Tukify is haunting '+HS.st+'. Watch: '+u,u,$('#hshare'))};
+$('#hshare').onclick=()=>{if(!HS)return;const u=sURL({store:HS.st,p:HS.ps.join('|')});track('haunt_store_share',{channel:shr('Tukify is haunting '+HS.st+'. Watch: '+u,u,$('#hshare'))})};
 /* 8. bury a friend (link-based, no server) */
 let GR=null;
 function stone(n,e){$('#gnn').textContent=n||'Your friend';$('#gee').textContent=e||'Their epitaph here';$('#gdd').textContent='Died on Halloween '+new Date().getFullYear();const s=$('#gstone');s.classList.remove('carve');void s.offsetWidth;s.classList.add('carve')}
 function gUpd(){if(!GR)return null;const u=sURL({rip:GR.n,e:GR.e}),t='I carved a tombstone for '+GR.n+'. Go and see it: '+u;$('#gwa').href='https://wa.me/?text='+encodeURIComponent(t);return[u,t]}
-$('#gcarve').onclick=()=>{const n=cl($('#gn').value),e=cl($('#ge').value)||'He pressed the button';if(!n){$('#gn').focus();return}GR={n,e};stone(n,e);$('#gshare').disabled=$('#gcopy').disabled=false;gUpd()};
-$('#gshare').onclick=()=>{const r=gUpd();r&&shr(r[1],r[0],$('#gshare'))};$('#gcopy').onclick=()=>{const r=gUpd();r&&cp(r[0],$('#gcopy'))};
+$('#gcarve').onclick=()=>{const n=cl($('#gn').value),e=cl($('#ge').value)||'He pressed the button';if(!n){$('#gn').focus();return}GR={n,e};track('grave_carve');stone(n,e);$('#gshare').disabled=$('#gcopy').disabled=false;gUpd()};
+$('#gshare').onclick=()=>{const r=gUpd();r&&track('grave_share',{channel:shr(r[1],r[0],$('#gshare'))})};$('#gcopy').onclick=()=>{const r=gUpd();if(r){cp(r[0],$('#gcopy'));track('grave_share',{channel:'copy'})}};
 function afterGate(){
 if(Pd!==null){toast('Scroll to the very bottom. Press "Do not press".',7000);$('#nopress').classList.add('hot')}
 else if(Pr){stone(Pr,Pe||'Someone pressed the button');$('#grave h2').childNodes[0].nodeValue='Your Grave';$('#grave .sub').textContent='Someone carved this for you. Now bury someone back.';setTimeout(()=>$('#grave').scrollIntoView({behavior:'smooth'}),300)}
-else if(Ps){$('#hs').value=Ps;$$('.hp').forEach((i,k)=>i.value=Pp[k]||'');setTimeout(()=>{$('#haunt').scrollIntoView({behavior:'smooth'});haunt(Ps,[Pp[0]||'Crypt Hoodie',Pp[1]||'Raven Quill',Pp[2]||'Blood Moon Candle'])},400)}}
+else if(Ps){$('#hs').value=Ps;$$('.hp').forEach((i,k)=>i.value=Pp[k]||'');setTimeout(()=>{$('#haunt').scrollIntoView({behavior:'smooth'});haunt(Ps,[Pp[0]||'Crypt Hoodie',Pp[1]||'Raven Quill',Pp[2]||'Blood Moon Candle'],'link')},400)}}
 /* 6. midnight / halloween night mode */
-(function(){const d=new Date(),hw=d.getMonth()==9&&d.getDate()==31;window.MID=d.getHours()<4||hw;if(!window.MID)return;document.documentElement.classList.add('mid');
+(function(){const d=new Date(),hw=d.getMonth()==9&&d.getDate()==31;window.MID=d.getHours()<4||hw;if(!window.MID)return;document.documentElement.classList.add('mid');track('midnight_mode_shown',{mode:hw?'halloween_night':'midnight'});
 const b=document.createElement('div');b.className='mpill mono';b.textContent=hw?'Halloween Night mode is active':'Midnight mode is active. You should not be awake.';$('#cd').after(b);
 for(let i=0;i<8;i++){const e=document.createElement('div');e.className='eye';e.style.left=(5+Math.random()*88)+'%';e.style.top=(8+Math.random()*80)+'%';e.style.animationDelay=-Math.random()*5+'s';e.style.setProperty('--s',.6+Math.random()*1.2);e.innerHTML='<i></i><i></i>';$('#eyes').appendChild(e)}setL(mx,my)})();
+/* ---- analytics: page-wide events (fixed labels and numbers only) ---- */
+(function(){if($('#gate'))track('gate_view');
+track('device',{kind:matchMedia('(hover:none)').matches?'touch':'mouse'});track('reduced_motion',{value:rm});
+/* links: downloads, wordpress.org, share links, other outbound (host only, never the path or query) */
+const SHARE={dwa:['dare_share','whatsapp'],dfb:['dare_share','facebook'],gwa:['grave_share','whatsapp']};
+document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href]');if(!a)return;let u;try{u=new URL(a.href,location.href)}catch(x){return}
+if(SHARE[a.id]){track(SHARE[a.id][0],{channel:SHARE[a.id][1]});return}
+if(!/^https?:$/.test(u.protocol)||u.host===location.host)return;const w=tkWhere(a);
+if(u.host==='downloads.wordpress.org'){track('download_click',{location:w});if(a.closest('.ctas'))track('cta_click',{id:'summon_it'})}
+else if(u.host==='wordpress.org'&&u.pathname.startsWith('/plugins/tukify'))track('wporg_click',{location:w});
+else track('outbound_click',{host:u.host})},true);
+/* scroll depth, once per threshold */
+let sq=0;const sd=()=>{sq=0;const h=document.documentElement.scrollHeight-innerHeight,p=h>0?scrollY/h*100:0;[25,50,75,100].forEach(t=>{if(p>=(t==100?99:t))track('scroll_depth',{percent:t})})};
+addEventListener('scroll',()=>{if(!sq)sq=requestAnimationFrame(sd)},{passive:true});
+/* time on page, counting only while the tab is visible */
+let vis=0;setInterval(()=>{if(document.hidden)return;vis++;if(vis==30||vis==60||vis==120||vis==300)track('time_on_page',{seconds:vis})},1000);
+/* first view of each section (its top passes three quarters of the screen) */
+const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){track('section_view',{id:e.target.id});so.unobserve(e.target)}}),{rootMargin:'0px 0px -25% 0px'});
+['demo','ouija','haunt','powers','ritual','history','grave','faq'].forEach(id=>{const s=document.getElementById(id);s&&so.observe(s)});
+$$('#faq details').forEach((d,i)=>d.addEventListener('toggle',()=>{if(d.open)track('faq_open',{index:i+1})}));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)track('tab_return')})})();
 </script>
+<!-- Vercel Speed Insights (https://vercel.com/docs/speed-insights/quickstart, HTML), with the same URL redaction -->
+<script>
+window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+window.si('beforeSend', function (data) { return data && data.url ? Object.assign({}, data, { url: tkRedact(data.url) }) : data });
+</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>
