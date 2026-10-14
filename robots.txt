@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tukify-halloween.vercel.app/sitemap.xml
+Sitemap: https://tukify.vercel.app/sitemap.xml
